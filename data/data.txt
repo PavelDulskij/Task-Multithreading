@@ -1,0 +1,8 @@
+3
+200
+ShipA;0
+ShipB;50
+ShipC;30
+ShipD;0
+ShipE;24
+ShipF;12
