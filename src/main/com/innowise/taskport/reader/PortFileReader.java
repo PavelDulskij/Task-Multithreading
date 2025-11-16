@@ -4,7 +4,8 @@ import com.innowise.taskport.config.PortConfig;
 import com.innowise.taskport.exception.PortException;
 
 import java.io.IOException;
+import java.util.List;
 
 public interface PortFileReader {
-    PortConfig readFile(String path) throws PortException;
+    List<String> readFile(String path) throws PortException;
 }

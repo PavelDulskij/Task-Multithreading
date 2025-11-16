@@ -6,6 +6,7 @@ import com.innowise.taskport.entity.Ship;
 import com.innowise.taskport.exception.PortException;
 import com.innowise.taskport.reader.PortFileReader;
 import com.innowise.taskport.warehouse.Warehouse;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -16,34 +17,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PortFileReaderImpl implements PortFileReader {
-    private static final String SEMICOLON_REGEX = ";";
     private static final Logger log = LogManager.getLogger();
 
     @Override
-    public PortConfig readFile(String path) throws PortException {
+    public List<String> readFile(String path) throws PortException {
         List<String> lines;
-        Berth berth;
-        Warehouse warehouse = Warehouse.getInstance();
-        List<Ship> ships;
         try {
+            log.log(Level.INFO, "trying to read {} file", path);
             lines = Files.readAllLines(Path.of(path));
-            int berthsCount = Integer.parseInt(lines.getFirst());
-            int warehouseCapacity = Integer.parseInt(lines.get(1));
-            berth = new Berth(berthsCount);
-            warehouse.setCapacity(warehouseCapacity);
-            ships = new ArrayList<>();
-
-            for (int i = 2; i < lines.size(); i++) {
-                String[] parts = lines.get(i).split(SEMICOLON_REGEX);
-                ships.add(new Ship(parts[0], warehouse, berth, Integer.parseInt(parts[1])));
-            }
+            log.log(Level.INFO, "{} file has been read successfully", path);
         } catch (IOException e) {
             throw new PortException(e);
         }
-
-
-        return new PortConfig(berth, warehouse, ships);
+        return lines;
     }
-
 
 }
