@@ -8,12 +8,13 @@ import java.util.concurrent.Callable;
 
 public class Ship extends Thread {
     private final String name;
-    private final Warehouse warehouse = Warehouse.getInstance();
+    private final Warehouse warehouse;
     private int containersCount;
     private ShipState state;
 
-    public Ship(String name, int containersCount) {
+    public Ship(String name, Warehouse warehouse, int containersCount) {
         this.name = name;
+        this.warehouse = warehouse;
         this.containersCount = containersCount;
     }
 
@@ -39,6 +40,7 @@ public class Ship extends Thread {
 
     @Override
     public void run() {
+        process();
         if (containersCount == 0) {
             warehouse.loadShip(this);
         } else {
