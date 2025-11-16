@@ -9,6 +9,6 @@ public class UnloadingState implements ShipState {
     public void process(Ship ship) {
         log.log(Level.INFO, "{} is unloading", ship.getName());
         ship.getWarehouse().unloadShip(ship);
-        ship.setState(new DockingState());
+        ship.setState(new DepartingState());
     }
 }

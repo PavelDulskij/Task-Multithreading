@@ -9,6 +9,6 @@ public class LoadingState implements ShipState {
     public void process(Ship ship) {
         log.log(Level.INFO, "{} is loading", ship.getName());
         ship.getWarehouse().loadShip(ship);
-        ship.setState(new DockingState());
+        ship.setState(new DepartingState());
     }
 }
