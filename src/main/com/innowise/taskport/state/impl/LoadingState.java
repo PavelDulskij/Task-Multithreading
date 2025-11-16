@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Level;
 public class LoadingState implements ShipState {
     @Override
     public void process(Ship ship) {
-        log.log(Level.INFO, "{} is loading", ship.getShipName());
+        log.log(Level.INFO, "{} is loading", ship.getName());
+        ship.getWarehouse().loadShip(ship);
     }
 }

@@ -5,11 +5,10 @@ import com.innowise.taskport.exception.PortException;
 import com.innowise.taskport.state.ShipState;
 import org.apache.logging.log4j.Level;
 
-public class WaitingState implements ShipState {
+public class DepartingState implements ShipState {
     @Override
     public void process(Ship ship) throws PortException {
-        log.log(Level.INFO, "{} is waiting for free berth", ship.getName());
-        ship.getBerth().acquireBerth(ship.getName());
-        ship.setState(new DockingState());
+        log.log(Level.INFO, "{} is leaving port", ship.getName());
+        ship.getBerth().releaseBerth(ship.getName());
     }
 }

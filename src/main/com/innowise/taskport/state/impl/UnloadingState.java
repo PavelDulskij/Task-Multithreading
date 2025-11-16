@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Level;
 public class UnloadingState implements ShipState {
     @Override
     public void process(Ship ship) {
-        log.log(Level.INFO, "{} is unloading", ship.getShipName());
+        log.log(Level.INFO, "{} is unloading", ship.getName());
+        ship.getWarehouse().unloadShip(ship);
     }
 }
