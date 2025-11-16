@@ -12,7 +12,6 @@ public class Ship extends Thread {
     private int containersCount;
     private ShipState state;
 
-
     public Ship(String name, int containersCount) {
         this.name = name;
         this.containersCount = containersCount;
