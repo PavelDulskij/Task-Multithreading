@@ -37,3 +37,4 @@ build/
 ### Mac OS ###
 .DS_Store
 /src/main/com/innowise/taskport/main
+src/main/com/innowise/taskport/main/PortMain.java
