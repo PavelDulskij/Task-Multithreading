@@ -1,7 +1,6 @@
 package com.innowise.taskport.warehouse;
 
 import com.innowise.taskport.entity.Ship;
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -19,44 +18,72 @@ public class Warehouse {
 
     private Warehouse() {}
 
-    private static class WarehouseHolder {
+    private static class Holder {
         private static final Warehouse INSTANCE = new Warehouse();
     }
 
     public static Warehouse getInstance() {
-        return WarehouseHolder.INSTANCE;
+        return Holder.INSTANCE;
     }
 
     public void setCapacity(int capacity) {
         this.capacity = capacity;
     }
 
-    public void loadShip(Ship ship) {
+    public int getCurrent() {
+        return current;
+    }
+
+    public int getCapacity() {
+        return capacity;
+    }
+
+    public void unloadShip(Ship ship) {
+        lock.lock();
         try {
-            lock.lock();
-            while (current < ship.getContainersCount()) {
-                notEmpty.await();
-                log.log(Level.INFO, "{} is waiting for containers", ship.getName());
+            int amount = ship.getContainersCount();
+
+            log.info("{} wants to UNLOAD {} containers", ship.getName(), amount);
+
+            while (current + amount > capacity) {
+                log.info("{} is waiting: not enough space in warehouse. current={}, capacity={}",
+                        ship.getName(), current, capacity);
+                notFull.await();
             }
-            current -= ship.getContainersCount();
-            notFull.signalAll();
+
+            current += amount;
+            log.info("{} UNLOADED {} containers. Warehouse: {}/{}",
+                    ship.getName(), amount, current, capacity);
+
+            notEmpty.signalAll();
+
         } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+            Thread.currentThread().interrupt();
+            log.error("Unload interrupted for {}", ship.getName(), e);
         } finally {
             lock.unlock();
         }
     }
-    public void unloadShip(Ship ship) {
+
+    public void loadShip(Ship ship) {
+        lock.lock();
         try {
-            lock.lock();
-            while (current + ship.getContainersCount() > capacity) {
-                log.log(Level.INFO, "{} is waiting for space", ship.getName());
-                notFull.await();
+            log.info("{} wants to LOAD containers", ship.getName());
+
+            while (current < ship.getContainersCount()) {
+                log.info("{} is waiting: not enough containers in warehouse. current={}",
+                        ship.getName(), current);
+                notEmpty.await();
             }
-            current += ship.getContainersCount();
-            notEmpty.signalAll();
+
+            current -= ship.getContainersCount();
+            log.info("{} LOADED {} containers. Warehouse: {}/{}",
+                    ship.getName(), ship.getContainersCount(), current, capacity);
+            notFull.signalAll();
+
         } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+            Thread.currentThread().interrupt();
+            log.error("Load interrupted for {}", ship.getName(), e);
         } finally {
             lock.unlock();
         }

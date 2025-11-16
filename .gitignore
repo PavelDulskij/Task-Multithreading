@@ -39,3 +39,4 @@ build/
 /src/main/com/innowise/taskport/main
 src/main/com/innowise/taskport/main/PortMain.java
 /src/main/com/innowise/taskport/main
+data/data.txt

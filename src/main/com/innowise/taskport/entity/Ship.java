@@ -2,15 +2,11 @@ package com.innowise.taskport.entity;
 
 import com.innowise.taskport.exception.PortException;
 import com.innowise.taskport.state.ShipState;
+import com.innowise.taskport.state.impl.DepartingState;
 import com.innowise.taskport.state.impl.WaitingState;
 import com.innowise.taskport.warehouse.Warehouse;
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 
 public class Ship implements Runnable {
-    private static final Logger log = LogManager.getLogger(Ship.class);
     private final String name;
     private final Warehouse warehouse;
     private final Berth berth;
@@ -54,6 +50,9 @@ public class Ship implements Runnable {
     }
 
     public void process() throws PortException {
+        while (!(state instanceof DepartingState)) {
+            state.process(this);
+        }
         state.process(this);
     }
 
@@ -68,11 +67,10 @@ public class Ship implements Runnable {
 
     @Override
     public void run() {
-
         try {
             process();
         } catch (PortException e) {
-            log.log(Level.WARN, e);
+            Thread.currentThread().interrupt();
         }
     }
 }

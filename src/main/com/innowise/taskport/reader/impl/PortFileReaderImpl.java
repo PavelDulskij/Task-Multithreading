@@ -6,6 +6,8 @@ import com.innowise.taskport.entity.Ship;
 import com.innowise.taskport.exception.PortException;
 import com.innowise.taskport.reader.PortFileReader;
 import com.innowise.taskport.warehouse.Warehouse;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -15,6 +17,7 @@ import java.util.List;
 
 public class PortFileReaderImpl implements PortFileReader {
     private static final String SEMICOLON_REGEX = ";";
+    private static final Logger log = LogManager.getLogger();
 
     @Override
     public PortConfig readFile(String path) throws PortException {
