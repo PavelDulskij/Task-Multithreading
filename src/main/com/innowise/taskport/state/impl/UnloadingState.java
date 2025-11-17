@@ -10,7 +10,7 @@ public class UnloadingState implements ShipState {
     @Override
     public void process(Ship ship) throws InterruptedException {
         log.log(Level.INFO, "{} is unloading", ship.getName());
-        TimeUnit.SECONDS.sleep(3);
+        TimeUnit.SECONDS.sleep(SECONDS);
         ship.getWarehouse().unloadShip(ship);
         ship.setState(new DepartingState());
     }

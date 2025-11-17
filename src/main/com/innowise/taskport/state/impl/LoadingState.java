@@ -10,7 +10,7 @@ public class LoadingState implements ShipState {
     @Override
     public void process(Ship ship) throws InterruptedException {
         log.log(Level.INFO, "{} is loading", ship.getName());
-        TimeUnit.SECONDS.sleep(2);
+        TimeUnit.SECONDS.sleep(SECONDS);
         ship.getWarehouse().loadShip(ship);
         ship.setState(new DepartingState());
     }

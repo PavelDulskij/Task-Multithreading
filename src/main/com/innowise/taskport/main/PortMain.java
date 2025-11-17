@@ -7,11 +7,15 @@ import com.innowise.taskport.parser.Impl.PortFileParserImpl;
 import com.innowise.taskport.parser.PortFileParser;
 import com.innowise.taskport.reader.PortFileReader;
 import com.innowise.taskport.reader.impl.PortFileReaderImpl;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class PortMain {
+    private static final Logger log = LogManager.getLogger();
+
     static void main() throws PortException, InterruptedException {
         PortFileReader reader = new PortFileReaderImpl();
         PortFileParser parser = new PortFileParserImpl();
@@ -29,6 +33,6 @@ public class PortMain {
             t.join();
         }
 
-        System.out.println("====All ships are served====");
+        log.info("All ships are served");
     }
 }
