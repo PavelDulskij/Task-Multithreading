@@ -10,7 +10,6 @@ import com.innowise.taskport.reader.impl.PortFileReaderImpl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class PortMain {
     static void main() throws PortException, InterruptedException {
