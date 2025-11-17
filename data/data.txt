@@ -1,8 +1,8 @@
 3
 200
-ShipA;0
-ShipB;50
-ShipC;30
-ShipD;0
-ShipE;24
-ShipF;12
+ShipA;0;30;40
+ShipB;50;50;60
+ShipC;30;15;70
+ShipD;0;14;30
+ShipE;24;20;40
+ShipF;12;32;60

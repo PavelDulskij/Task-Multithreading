@@ -4,6 +4,7 @@ import com.innowise.taskport.entity.Ship;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -18,12 +19,12 @@ public class Warehouse {
 
     private Warehouse() {}
 
-    private static class Holder {
+    private static class WarehouseHolder {
         private static final Warehouse INSTANCE = new Warehouse();
     }
 
     public static Warehouse getInstance() {
-        return Holder.INSTANCE;
+        return WarehouseHolder.INSTANCE;
     }
 
     public void setCapacity(int capacity) {
@@ -42,8 +43,7 @@ public class Warehouse {
         lock.lock();
         try {
             int amount = ship.getContainersCount();
-
-            log.info("{} wants to UNLOAD {} containers", ship.getName(), amount);
+            log.info("{} wants to unload {} containers", ship.getName(), amount);
 
             while (current + amount > capacity) {
                 log.info("{} is waiting: not enough space in warehouse. current={}, capacity={}",
@@ -52,7 +52,8 @@ public class Warehouse {
             }
 
             current += amount;
-            log.info("{} UNLOADED {} containers. Warehouse: {}/{}",
+            ship.setContainersCount(ship.getContainersCount() - amount);
+            log.info("{} unloaded {} containers. Warehouse: {}/{}",
                     ship.getName(), amount, current, capacity);
 
             notEmpty.signalAll();
@@ -68,17 +69,18 @@ public class Warehouse {
     public void loadShip(Ship ship) {
         lock.lock();
         try {
-            log.info("{} wants to LOAD containers", ship.getName());
+            int amountToLoad = ship.getAmountToLoad();
+            log.info("{} wants to load containers", ship.getName());
 
-            while (current < ship.getContainersCount()) {
+            while (current < amountToLoad) {
                 log.info("{} is waiting: not enough containers in warehouse. current={}",
                         ship.getName(), current);
                 notEmpty.await();
             }
-
-            current -= ship.getContainersCount();
-            log.info("{} LOADED {} containers. Warehouse: {}/{}",
-                    ship.getName(), ship.getContainersCount(), current, capacity);
+            current -= amountToLoad;
+            ship.setContainersCount(ship.getContainersCount() + amountToLoad);
+            log.info("{} loaded {} containers. Warehouse: {}/{}",
+                    ship.getName(), amountToLoad, current, capacity);
             notFull.signalAll();
 
         } catch (InterruptedException e) {

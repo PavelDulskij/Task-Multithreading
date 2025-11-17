@@ -7,5 +7,5 @@ import org.apache.logging.log4j.Logger;
 
 public interface ShipState {
     Logger log = LogManager.getLogger();
-    void process(Ship ship) throws PortException;
+    void process(Ship ship) throws PortException, InterruptedException;
 }

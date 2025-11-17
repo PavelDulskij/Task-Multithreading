@@ -11,21 +11,26 @@ import org.apache.logging.log4j.Logger;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PortFIleParserImpl implements PortFileParser {
+public class PortFileParserImpl implements PortFileParser {
     private static final String SEMICOLON_REGEX = ";";
     private static final Logger log = LogManager.getLogger();
     @Override
     public PortConfig parseFile(List<String> lines) {
+        log.info("Trying to parse file...");
         Warehouse warehouse = Warehouse.getInstance();
         List<Ship> ships =  new ArrayList<>();;
         int berthsCount = Integer.parseInt(lines.getFirst());
         int warehouseCapacity = Integer.parseInt(lines.get(1));
         Berth berth = new Berth(berthsCount);
         warehouse.setCapacity(warehouseCapacity);
+
         for (int i = 2; i < lines.size(); i++) {
             String[] parts = lines.get(i).split(SEMICOLON_REGEX);
-            ships.add(new Ship(parts[0], warehouse, berth, Integer.parseInt(parts[1])));
+            ships.add(new Ship(parts[0], warehouse, berth, Integer.parseInt(parts[1]),
+                    Integer.parseInt(parts[2]), Integer.parseInt(parts[3])));
         }
+        log.info("Parsed {} ships, berthCount={}, warehouseCapacity={}",
+                ships.size(), berthsCount, warehouseCapacity);
         return new PortConfig(berth, warehouse, ships);
     }
 }

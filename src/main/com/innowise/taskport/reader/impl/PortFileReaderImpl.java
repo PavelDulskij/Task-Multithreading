@@ -21,11 +21,14 @@ public class PortFileReaderImpl implements PortFileReader {
 
     @Override
     public List<String> readFile(String path) throws PortException {
+        if (path == null || path.isBlank()) {
+            throw new PortException("File path cannot be null or empty");
+        }
         List<String> lines;
         try {
             log.log(Level.INFO, "trying to read {} file", path);
             lines = Files.readAllLines(Path.of(path));
-            log.log(Level.INFO, "{} file has been read successfully", path);
+            log.info("Read {} lines from {}", lines.size(), path);
         } catch (IOException e) {
             throw new PortException(e);
         }
