@@ -8,5 +8,5 @@ import org.apache.logging.log4j.Logger;
 public interface ShipState {
     Logger log = LogManager.getLogger();
     long SECONDS = (long) (Math.random() * 7 + 2);
-    void process(Ship ship) throws PortException, InterruptedException;
+    void process(Ship ship) throws InterruptedException, PortException;
 }

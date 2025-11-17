@@ -19,11 +19,12 @@ public class Berth {
             semaphore.acquire();
             log.info("{} occupied the berth.", shipName);
         } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             throw new PortException(e);
         }
     }
 
-    public void releaseBerth(String shipName) {
+    public void releaseBerth(String shipName) throws PortException{
         semaphore.release();
         log.info("{} released the berth.", shipName);
     }

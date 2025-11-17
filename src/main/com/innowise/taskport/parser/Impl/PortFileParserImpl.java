@@ -3,6 +3,7 @@ package com.innowise.taskport.parser.Impl;
 import com.innowise.taskport.config.PortConfig;
 import com.innowise.taskport.entity.Berth;
 import com.innowise.taskport.entity.Ship;
+import com.innowise.taskport.exception.PortException;
 import com.innowise.taskport.parser.PortFileParser;
 import com.innowise.taskport.warehouse.Warehouse;
 import org.apache.logging.log4j.LogManager;
@@ -15,10 +16,13 @@ public class PortFileParserImpl implements PortFileParser {
     private static final String SEMICOLON_REGEX = ";";
     private static final Logger log = LogManager.getLogger();
     @Override
-    public PortConfig parseFile(List<String> lines) {
+    public PortConfig parseFile(List<String> lines) throws PortException {
         log.info("Trying to parse file...");
+        if(lines.isEmpty()) {
+            throw new PortException("File is empty");
+        }
         Warehouse warehouse = Warehouse.getInstance();
-        List<Ship> ships =  new ArrayList<>();;
+        List<Ship> ships =  new ArrayList<>();
         int berthsCount = Integer.parseInt(lines.getFirst());
         int warehouseCapacity = Integer.parseInt(lines.get(1));
         Berth berth = new Berth(berthsCount);

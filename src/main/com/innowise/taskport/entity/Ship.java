@@ -95,10 +95,9 @@ public class Ship implements Runnable {
     public void run() {
         try {
             process();
-        } catch (PortException e) {
-            Thread.currentThread().interrupt();
-        } catch (InterruptedException e) {
+        } catch (PortException | InterruptedException e) {
             log.warn("{} was interrupted", Thread.currentThread().getName());
+            Thread.currentThread().interrupt();
         }
     }
 }
