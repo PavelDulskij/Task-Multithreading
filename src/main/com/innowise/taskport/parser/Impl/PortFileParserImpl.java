@@ -10,7 +10,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 public class PortFileParserImpl implements PortFileParser {
     private static final String SEMICOLON_REGEX = ";";
@@ -25,16 +27,20 @@ public class PortFileParserImpl implements PortFileParser {
         List<Ship> ships =  new ArrayList<>();
         int berthsCount = Integer.parseInt(lines.getFirst());
         int warehouseCapacity = Integer.parseInt(lines.get(1));
-        Berth berth = new Berth(berthsCount);
         warehouse.setCapacity(warehouseCapacity);
+        Queue<Berth> berths = new LinkedList<>();
+        for (int i = 1; i <= berthsCount; i++) {
+            berths.add(new Berth("Berth-" + i));
+        }
+        warehouse.setBerths(berths);
 
         for (int i = 2; i < lines.size(); i++) {
             String[] parts = lines.get(i).split(SEMICOLON_REGEX);
-            ships.add(new Ship(parts[0], warehouse, berth, Integer.parseInt(parts[1]),
+            ships.add(new Ship(parts[0], warehouse, Integer.parseInt(parts[1]),
                     Integer.parseInt(parts[2]), Integer.parseInt(parts[3])));
         }
         log.info("Parsed {} ships, berthCount={}, warehouseCapacity={}",
                 ships.size(), berthsCount, warehouseCapacity);
-        return new PortConfig(berth, warehouse, ships);
+        return new PortConfig(berths, warehouse, ships);
     }
 }

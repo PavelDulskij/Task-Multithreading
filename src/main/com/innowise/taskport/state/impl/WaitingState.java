@@ -1,15 +1,20 @@
 package com.innowise.taskport.state.impl;
 
+import com.innowise.taskport.entity.Berth;
 import com.innowise.taskport.entity.Ship;
-import com.innowise.taskport.exception.PortException;
 import com.innowise.taskport.state.ShipState;
-import org.apache.logging.log4j.Level;
 
 public class WaitingState implements ShipState {
     @Override
-    public void process(Ship ship) throws PortException {
-        log.log(Level.INFO, "{} is waiting for free berth", ship.getName());
-        ship.getBerth().acquireBerth(ship.getName());
-        ship.setState(new DockingState());
+    public void process(Ship ship) {
+        try {
+            log.info("{} is waiting for free birth", ship.getName());
+            Berth berth = ship.getWarehouse().acquireBerth();
+            ship.setBerth(berth);
+            ship.setState(new DockingState());
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
     }
 }
+

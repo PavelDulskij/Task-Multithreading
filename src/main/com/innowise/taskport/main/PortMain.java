@@ -16,7 +16,7 @@ import java.util.List;
 public class PortMain {
     private static final Logger log = LogManager.getLogger();
 
-    static void main() throws PortException, InterruptedException {
+    static void main() throws PortException{
         PortFileReader reader = new PortFileReaderImpl();
         PortFileParser parser = new PortFileParserImpl();
 
@@ -29,10 +29,13 @@ public class PortMain {
         }
 
         threads.forEach(Thread::start);
-        for (Thread t : threads) {
-            t.join();
+        try {
+            for (Thread t : threads) {
+                t.join();
+            }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
         }
-
         log.info("All ships are served");
     }
 }
