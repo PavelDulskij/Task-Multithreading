@@ -75,7 +75,7 @@ public class Warehouse {
 
             while (current.get() + amount > warehouseCapacity.get()) {
                 log.info("{} is waiting: not enough space in warehouse. current={}, capacity={}",
-                        ship.getName(), current, warehouseCapacity.get());
+                        ship.getName(), current.get(), warehouseCapacity.get());
                 notFull.await();
             }
 
@@ -83,7 +83,7 @@ public class Warehouse {
             ship.setContainersCount(0);
 
             log.info("{} unloaded {} containers. Warehouse = {}/{}",
-                    ship.getName(), amount, current, warehouseCapacity.get());
+                    ship.getName(), amount, current.get(), warehouseCapacity.get());
 
             notEmpty.signalAll();
 
@@ -98,12 +98,12 @@ public class Warehouse {
     public void loadShip(Ship ship) {
         lock.lock();
         try {
-            int amount = ship.getAmountToLoad();
+            int amount = ship.getAmountToMove();
             log.info("{} wants to load {} containers", ship.getName(), amount);
 
             while (current.get() < amount) {
                 log.info("{} is waiting: not enough containers in warehouse. current={}",
-                        ship.getName(), current);
+                        ship.getName(), current.get());
                 notEmpty.await();
             }
 
@@ -111,7 +111,7 @@ public class Warehouse {
             ship.setContainersCount(ship.getContainersCount() + amount);
 
             log.info("{} loaded {} containers. Warehouse = {}/{}",
-                    ship.getName(), amount, current, warehouseCapacity.get());
+                    ship.getName(), amount, current.get(), warehouseCapacity.get());
 
             notFull.signalAll();
 

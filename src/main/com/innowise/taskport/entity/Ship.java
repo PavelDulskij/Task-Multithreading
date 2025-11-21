@@ -37,8 +37,8 @@ public class Ship implements Runnable {
         this.containersCount = containersCount;
     }
 
-    public int getAmountToLoad() {
-        return shipCapacity;
+    public int getAmountToMove() {
+        return amountToMove;
     }
 
     public Warehouse getWarehouse() {

@@ -8,7 +8,7 @@ public class WaitingState implements ShipState {
     @Override
     public void process(Ship ship) {
         try {
-            log.info("{} is waiting for free birth", ship.getName());
+            log.info("{} is waiting for free berth", ship.getName());
             Berth berth = ship.getWarehouse().acquireBerth();
             ship.setBerth(berth);
             ship.setState(new DockingState());

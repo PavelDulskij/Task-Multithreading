@@ -10,7 +10,7 @@ public class DepartingState implements ShipState {
     @Override
     public void process(Ship ship)  {
         try {
-            log.log(Level.INFO, "{} is leaving port", ship.getName());
+            log.log(Level.INFO, "{} is leaving berth", ship.getName());
             TimeUnit.SECONDS.sleep(SECONDS);
             ship.getWarehouse().releaseBerth(ship.getBerth());
         } catch (InterruptedException e) {
